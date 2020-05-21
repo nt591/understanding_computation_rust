@@ -12,20 +12,16 @@ enum SimpleType {
     },
 }
 
-trait Showable {
-    fn show(&self) -> String;
-}
-
 trait Reducible {
     fn reduce(&self) -> i64;
 }
 
-impl Showable for SimpleType {
-    fn show(&self) -> String {
+impl std::fmt::Display for SimpleType {
+    fn fmt(&self,  f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
         match self {
-            SimpleType::Number { value } => value.to_string(),
-            SimpleType::Add { left, right } => format!("{} + {}", left.show(), right.show()),
-            SimpleType::Multiply { left, right } => format!("{} * {}", left.show(), right.show()),
+            SimpleType::Number { value } => write!(f, "{}", value),
+            SimpleType::Add { left, right } => write!(f, "{} + {}", left, right),
+            SimpleType::Multiply { left, right } => write!(f, "{} * {}", left, right),
         }
     }
 }
@@ -50,7 +46,7 @@ fn main() {
         right: Box::new(m1),
     };
 
-    println!("{}", add.show());
+    println!("{}", add);
     println!("Value: {}", add.reduce());
     println!("Hello, world!");
 }
