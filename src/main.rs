@@ -13,7 +13,8 @@ enum SimpleType {
 }
 
 trait Reducible {
-    fn reduce(&self) -> i64;
+    fn inner_reduce(&self) -> i64;
+    fn reduce(&self) -> SimpleType;
 }
 
 impl std::fmt::Display for SimpleType {
@@ -27,12 +28,15 @@ impl std::fmt::Display for SimpleType {
 }
 
 impl Reducible for SimpleType {
-    fn reduce(&self) -> i64 {
+    fn inner_reduce(&self) -> i64 {
         match self {
             SimpleType::Number { value } => *value,
-            SimpleType::Add { left, right } => left.reduce() + right.reduce(),
-            SimpleType::Multiply { left, right } => left.reduce() * right.reduce(),
+            SimpleType::Add { left, right } => left.inner_reduce() + right.inner_reduce(),
+            SimpleType::Multiply { left, right } => left.inner_reduce() * right.inner_reduce(),
         }
+    }
+    fn reduce(&self) -> SimpleType {
+        SimpleType::Number { value: self.inner_reduce() }
     }
 }
 
